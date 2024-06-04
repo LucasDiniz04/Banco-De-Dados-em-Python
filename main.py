@@ -100,111 +100,150 @@ def excluirAluno(): #Função que exclui aluno(s) da tabela
       voltarMenu() #chama a função voltarMenu()
 
 def modificarAluno(): #Função que modifica dados do aluno na tabela
-  try: #tenta executar o bloco abaixo
-    conexao = conector.connect("cadastro_alunos.db") #conecta ao banco de dados "cadastro_alunos"
-    cursor = conexao.cursor() #cria um cursor para executar comandos sql
-    matricula = int(input("Digite a matricula do aluno que deseja modificar: ")) #o aluno será encontrado no banco de dados com base na matrícula dele.
-    print("\nO que deseja modificar? \n1: Nome\n2: Nascimento\n3: Notas e Disciplinas\n4: Matrícula") #menu de escolha
-    escolha = int(input("Escolha uma opção: ")) # variável que vai receber a decisão do usuário.
-    match escolha:
-      case 1: #se o usuario digitar '1', vai executar os comandos abaixo:
-        nome = input("Digite o novo nome do aluno: ")
-        comando = f"UPDATE Aluno SET nome = '{nome}' WHERE matricula = {matricula}" #comando para modificar o nome do aluno.
-        cursor.execute(comando) #executa o comando
-        conexao.commit() #confirma a modificação dos dados
-        print("Aluno modificado com sucesso!")
-        voltarMenu()
+    try: #tenta executar o bloco abaixo
+        conexao = conector.connect("cadastro_alunos.db") #conecta ao banco de dados "cadastro_alunos"
+        cursor = conexao.cursor() #cria um cursor para executar comandos sql
+        matricula = int(input("Digite a matricula do aluno que deseja modificar: ")) #o aluno será encontrado no banco de dados com base na matrícula dele.
+        print("\nO que deseja modificar? \n1: Nome\n2: Nascimento\n3: Notas e Disciplinas\n4: Matrícula") #menu de escolha
+        escolha = int(input("Escolha uma opção: ")) # variável que vai receber a decisão do usuário.
+        match escolha:
+            case 1: #se o usuario digitar '1', vai executar os comandos abaixo:
+                nome = input("Digite o novo nome do aluno: ")
+                comando = f"UPDATE Aluno SET nome = '{nome}' WHERE matricula = {matricula}" #comando para modificar o nome do aluno.
+                cursor.execute(comando) #executa o comando
+                conexao.commit() #confirma a modificação dos dados
+                print("Aluno modificado com sucesso!")
+                voltarMenu()
 
-      case 2: #se o usuario digitar '2', vai executar os comandos abaixo:
-        nascimento = input("Digite a nova data de nascimento do aluno (dd/mm/aaaa): ")
-        comando = f"UPDATE Aluno SET nascimento = '{nascimento}' WHERE matricula = {matricula}" #comando para modificar a data de nascimento do aluno.
-        cursor.execute(comando) #executa o comando
-        conexao.commit() #confirma a modificação dos dados
-        print("Aluno modificado com sucesso!")
-        voltarMenu()
+            case 2: #se o usuario digitar '2', vai executar os comandos abaixo:
+                nascimento = input("Digite a nova data de nascimento do aluno (dd/mm/aaaa): ")
+                comando = f"UPDATE Aluno SET nascimento = '{nascimento}' WHERE matricula = {matricula}" #comando para modificar a data de nascimento do aluno.
+                cursor.execute(comando) #executa o comando
+                conexao.commit() #confirma a modificação dos dados
+                print("Aluno modificado com sucesso!")
+                voltarMenu()
 
-      case 3: #se o usuario digitar '3', vai executar os comandos abaixo:
-        while True:
-          print("\nOpções de modificação de disciplinas e notas:")
-          print("1: Alterar nome da disciplina")
-          print("2: Alterar nota da disciplina")
-          print("3: Voltar")
-          escolha_disciplina = int(input("Escolha uma opção: "))
+            case 3: #se o usuario digitar '3', vai executar os comandos abaixo:
+                while True:
+                    print("\nOpções de modificação de disciplinas e notas:")
+                    print("1: Alterar nome da disciplina")
+                    print("2: Alterar nota da disciplina")
+                    print("3: Adicionar nova disciplina")
+                    print("4: Remover uma disciplina")
+                    print("5: Adicionar nota em uma disciplina existente")
+                    print("6: Voltar")
+                    escolha_disciplina = int(input("Escolha uma opção: "))
 
-          if escolha_disciplina == 1: #se o usuario digitar '1', vai executar os comandos abaixo:
-            disciplina_atual = input("Digite o nome da disciplina atual: ")
-            nova_disciplina = input("Digite o novo nome da disciplina: ")
-            comando = f"UPDATE Nota SET disciplina = '{nova_disciplina}' WHERE matricula = {matricula} AND disciplina = '{disciplina_atual}'"
-            cursor.execute(comando) #executa o comando
-            conexao.commit() #confirma a modificação dos dados
-            print("Nome da disciplina modificado com sucesso!")
+                    if escolha_disciplina == 1: #se o usuario digitar '1', vai executar os comandos abaixo:
+                        disciplina_atual = input("Digite o nome da disciplina atual: ")
+                        nova_disciplina = input("Digite o novo nome da disciplina: ")
+                        comando = f"UPDATE Nota SET disciplina = '{nova_disciplina}' WHERE matricula = {matricula} AND disciplina = '{disciplina_atual}'"
+                        cursor.execute(comando) #executa o comando
+                        conexao.commit() #confirma a modificação dos dados
+                        print("Nome da disciplina modificado com sucesso!")
 
-          elif escolha_disciplina == 2:
-            disciplina = input("Digite o nome da disciplina: ")
-            comando = f"SELECT id, nota FROM Nota WHERE matricula = {matricula} AND disciplina = '{disciplina}'"
-            cursor.execute(comando)
-            notas = cursor.fetchall()
-            if notas:
-              print("Notas atuais:")
-              for nota in notas:
-                print(f"ID: {nota[0]}, Nota: {nota[1]}")
-        
-            while True:
-              print("\nOpções:")
-              print("1: Modificar uma nota")
-              print("2: Remover uma nota")
-              print("3: Voltar")
-              escolha_modificar = int(input("Escolha uma opção: "))
-            
-              if escolha_modificar == 1:
-                nota_id = int(input("Digite o ID da nota que deseja modificar: "))
-                nova_nota = float(input("Digite a nova nota: "))
-                comando = f"UPDATE Nota SET nota = {nova_nota} WHERE id = {nota_id}"
-                cursor.execute(comando)
-                conexao.commit()
-                print("Nota da disciplina modificada com sucesso!")
+                    elif escolha_disciplina == 2:
+                        disciplina = input("Digite o nome da disciplina: ")
+                        comando = f"SELECT id, nota FROM Nota WHERE matricula = {matricula} AND disciplina = '{disciplina}'"
+                        cursor.execute(comando)
+                        notas = cursor.fetchall()
+                        if notas:
+                            print("Notas atuais:")
+                            for nota in notas:
+                                print(f"ID: {nota[0]}, Nota: {nota[1]}")
 
-              elif escolha_modificar == 2:
-                nota_id = int(input("Digite o ID da nota que deseja remover: "))
-                comando = f"DELETE FROM Nota WHERE id = {nota_id}"
-                cursor.execute(comando)
-                conexao.commit()
-                print("Nota da disciplina removida com sucesso!")
+                            while True:
+                                print("\nOpções:")
+                                print("1: Modificar uma nota")
+                                print("2: Remover uma nota")
+                                print("3: Voltar")
+                                escolha_modificar = int(input("Escolha uma opção: "))
 
-              elif escolha_modificar == 3:
-                break
+                                if escolha_modificar == 1:
+                                    nota_id = int(input("Digite o ID da nota que deseja modificar: "))
+                                    nova_nota = float(input("Digite a nova nota: "))
+                                    comando = f"UPDATE Nota SET nota = {nova_nota} WHERE id = {nota_id}"
+                                    cursor.execute(comando)
+                                    conexao.commit()
+                                    print("Nota da disciplina modificada com sucesso!")
 
-              else:
-                print("Opção inválida. Tente novamente.")
-            else:
-              print("Nenhuma nota encontrada para essa disciplina.")
+                                elif escolha_modificar == 2:
+                                    nota_id = int(input("Digite o ID da nota que deseja remover: "))
+                                    comando = f"DELETE FROM Nota WHERE id = {nota_id}"
+                                    cursor.execute(comando)
+                                    conexao.commit()
+                                    print("Nota da disciplina removida com sucesso!")
 
-          elif escolha_disciplina == 3: #se o usuario digitar '3', vai voltar ao menu() do programa.
-            break
+                                elif escolha_modificar == 3:
+                                    break
 
-          else: #se o usuario digitar uma opção inválida, irá mostrar na tela 'opção inválida' e vai voltar ao menu() do programa.
-            print("Opção inválida. Tente novamente.")
+                                else:
+                                    print("Opção inválida. Tente novamente.")
+                        else:
+                            print("Nenhuma nota encontrada para essa disciplina.")
+
+                    elif escolha_disciplina == 3: #se o usuario digitar '3', vai executar os comandos abaixo:
+                        while True:
+                            disciplina = input("Digite o nome da nova disciplina: ")
+                            while True:
+                                nota = float(input(f"Digite a nota para a disciplina {disciplina}: "))
+                                comando = f"INSERT INTO Nota (matricula, disciplina, nota) VALUES ({matricula}, '{disciplina}', {nota})"
+                                cursor.execute(comando)
+                                conexao.commit()
+                                print("Nota inserida com sucesso!")
+                                continuar = input("Deseja inserir outra nota para esta disciplina? (sim/nao): ")
+                                if continuar.lower() != 'sim':
+                                    break
+                            continuar_disciplina = input("Deseja inserir outra disciplina? (sim/nao): ")
+                            if continuar_disciplina.lower() != 'sim':
+                                break
+                            
+                    elif escolha_disciplina == 4: # Adiciona opção para remover uma disciplina
+                      disciplina = input("Digite o nome da disciplina que deseja remover: ")
+                      comando = f"DELETE FROM Nota WHERE matricula = {matricula} AND disciplina = '{disciplina}'"
+                      cursor.execute(comando)
+                      conexao.commit()
+                      print("Disciplina removida com sucesso!")
+
+                    elif escolha_disciplina == 5: # Adiciona opção para adicionar nota em uma disciplina existente
+                      disciplina = input("Digite o nome da disciplina existente: ")
+                      while True:
+                        nota = float(input(f"Digite a nova nota para a disciplina {disciplina}: "))
+                        comando = f"INSERT INTO Nota (matricula, disciplina, nota) VALUES ({matricula}, '{disciplina}', {nota})"
+                        cursor.execute(comando)
+                        conexao.commit()
+                        print("Nota inserida com sucesso!")
+                        continuar = input("Deseja inserir outra nota para esta disciplina? (sim/nao): ")
+                        if continuar.lower() != 'sim':
+                          break
+
+                    elif escolha_disciplina == 6: #se o usuario digitar '4', vai voltar ao menu de modificação de aluno
+                        break
+
+                    else: #se o usuario digitar uma opção inválida, irá mostrar na tela 'opção inválida' e vai continuar no loop
+                        print("Opção inválida. Tente novamente.")
+
+            case 4: #se o usuario digitar '4', vai executar os comandos abaixo:
+                NovaMatricula = int(input("Digite a nova matricula do aluno: "))
+                comando = f"UPDATE Aluno SET matricula = {NovaMatricula} WHERE matricula = {matricula}" #comando para modificar a matricula do aluno.
+                comando2 = f"UPDATE Nota SET matricula = {NovaMatricula} WHERE matricula = {matricula}" #comando para modificar a matricula na tabela Nota.
+                cursor.execute(comando) #executa o comando
+                cursor.execute(comando2)
+                conexao.commit() #confirma a modificação dos dados
+                print("Aluno modificado com sucesso!")
+                voltarMenu()
+
+            case _:
+                print("Opção inválida.")
+                voltarMenu()
+
+    except conector.DatabaseError as erro: #se ocorrer um erro de conexão ao banco de dados, mostra o print abaixo:
+        print("Erro ao modificar aluno", erro)
+    finally: #executa o bloco independente do erro
+        if conexao: #verifica se a conexão foi criada
+            cursor.close() #fecha o cursor
+            conexao.close() #fecha a conexão
             voltarMenu() #chama a função voltarMenu()
-
-      case 4: #se o usuario digitar '4', vai executar os comandos abaixo:
-        NovaMatricula = int(input("Digite a nova matricula do aluno: "))
-        comando = f"UPDATE Aluno SET matricula = {NovaMatricula} WHERE matricula = {matricula}" #comando para modificar a matricula do aluno.
-        cursor.execute(comando) #executa o comando
-        conexao.commit() #confirma a modificação dos dados
-        print("Aluno modificado com sucesso!")
-        voltarMenu()
-
-    if(escolha <= 0 or escolha >= 5): #se a escolha for menor ou igual a zero ou maior ou igual a 5, irá mostrar na tela 'opção inválida' e vai voltar ao menu() do programa.
-      print("Opção inválida.")
-      voltarMenu() #chama a função voltarMenu()
-
-  except conector.DatabaseError as erro: #se ocorrer um erro de conexão ao banco de dados, mostra o print abaixo:
-    print("Erro ao modificar aluno", erro)
-  finally: #executa o bloco independente do erro
-    if conexao: #verifica se a conexão foi criada
-      cursor.close() #fecha o cursor
-      conexao.close() #fecha a conexão
-      voltarMenu() #chama a função voltarMenu()
 
 def consultarAluno(): #Função que consulta aluno na tabela
     try:
